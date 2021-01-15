@@ -10,8 +10,4 @@ function init()
 	gl.clear(gl.COLOR_BUFFER_BIT);
 }
 
-function render()
-{
-}
-
 window.onload = init;
