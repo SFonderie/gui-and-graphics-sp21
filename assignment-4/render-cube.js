@@ -1,3 +1,5 @@
+/*Assignment 4, Sydney Fonderie*/
+
 var cube = null;
 var gl = null;
 var angle = 0;
