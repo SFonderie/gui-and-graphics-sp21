@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <script src="../common/webgl-utils.js"></script>
+  <script src="../common/init-shaders.js"></script>
+  <script src="../common/MV.js"></script>
+  <script src="../common/matrix-stack.js"></script>  
+  <script src="../common/sphere.js"></script>
+  <script src="solar-system.js"></script>
+  <script src="solar-render.js"></script>
+
+  <script type="x-shader/x-vertex" id="sphere-vertex-shader">
+  attribute vec4  vPosition;
+
+  uniform mat4  MV;
+  uniform mat4  P;
+
+  void main()
+  {
+    gl_Position = P * MV * vPosition;
+  }
+  </script>
+
+  <script type="x-shader/x-fragment" id="sphere-fragment-shader">
+  precision highp float;
+
+  uniform vec4  color;
+
+  void main()
+  {
+    gl_FragColor = color;
+  }
+  </script>
+</head>
+
+<body>
+  <canvas id="webgl-canvas" width="1280" height="720"></canvas>
+</body>
+</html>
