@@ -24,6 +24,8 @@ var Planets = {
   Moon : undefined,
   Mars : undefined,
   Jupiter : undefined,
+  Europa: undefined,
+  Io: undefined,
   Saturn : undefined,
   Uranus : undefined,
   Neptune : undefined,
@@ -118,26 +120,27 @@ function render()
 	sun.render();
 	
 	// NOW THE ACTUAL PLANETS
-	RenderPlanet(ms, "Mercury");
-	RenderPlanet(ms, "Venus");
-	RenderPlanet(ms, "Earth", ["Moon"]);
-	RenderPlanet(ms, "Mars");
-	RenderPlanet(ms, "Jupiter");
-	RenderPlanet(ms, "Saturn");
-	RenderPlanet(ms, "Uranus");
-	RenderPlanet(ms, "Neptune");
-	RenderPlanet(ms, "Pluto");
+	RenderObj(ms, "Mercury");
+	RenderObj(ms, "Venus");
+	RenderObj(ms, "Earth", ["Moon"]);
+	RenderObj(ms, "Mars");
+	RenderObj(ms, "Jupiter", ["Europa", "Io"]);
+	RenderObj(ms, "Saturn");
+	RenderObj(ms, "Uranus");
+	RenderObj(ms, "Neptune");
+	RenderObj(ms, "Pluto");
 	
 	ms.pop();
 	
 	window.requestAnimationFrame(render);
 }
 
-function RenderPlanet(ms, name, moons)
+// Recursive planet rendering function. I am good at this.
+function RenderObj(ms, name, children)
 {
-	var planet = Planets[name];
+	var obj = Planets[name];
 	var data = SolarSystem[name];
-	planet.PointMode = false;
+	obj.PointMode = false;
 	
 	// Up the scope.
 	ms.push();
@@ -148,44 +151,20 @@ function RenderPlanet(ms, name, moons)
 	ms.scale(data.radius);
 	
 	// Rendering stuff
-	gl.useProgram(planet.program);
-	gl.uniformMatrix4fv(planet.uniforms.MV, false, flatten(ms.current()));
-	gl.uniformMatrix4fv(planet.uniforms.P, false, flatten(P));
-	gl.uniform4fv(planet.uniforms.color, flatten(data.color));
-	planet.render();
+	gl.useProgram(obj.program);
+	gl.uniformMatrix4fv(obj.uniforms.MV, false, flatten(ms.current()));
+	gl.uniformMatrix4fv(obj.uniforms.P, false, flatten(P));
+	gl.uniform4fv(obj.uniforms.color, flatten(data.color));
+	obj.render();
 	
-	if(moons)
+	// Recurse if children are specified.
+	if(children)
 	{
-		for(var i = 0; i < moons.length; i++)
+		for(var i = 0; i < children.length; i++)
 		{
-			RenderMoon(ms, moons[i]);
+			RenderObj(ms, children[i]);
 		}
 	}
-	
-	// Drop the scope.
-	ms.pop();
-}
-
-function RenderMoon(ms, name)
-{
-	var moon = Planets[name];
-	var data = SolarSystem[name];
-	moon.PointMode = false;
-	
-	// Up the scope.
-	ms.push();
-	
-	// Actual matrix stuff
-	ms.rotate((1.0 / data.year) * time, [0.0, 1.0, 1.0]);
-	ms.translate(data.distance, 0, 0);
-	ms.scale(data.radius);
-	
-	// Rendering stuff
-	gl.useProgram(moon.program);
-	gl.uniformMatrix4fv(moon.uniforms.MV, false, flatten(ms.current()));
-	gl.uniformMatrix4fv(moon.uniforms.P, false, flatten(P));
-	gl.uniform4fv(moon.uniforms.color, flatten(data.color));
-	moon.render();
 	
 	// Drop the scope.
 	ms.pop();
