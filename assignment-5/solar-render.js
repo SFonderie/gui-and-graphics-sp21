@@ -27,6 +27,7 @@ var Planets = {
   Europa: undefined,
   Io: undefined,
   Saturn : undefined,
+  Titan: undefined,
   Uranus : undefined,
   Neptune : undefined,
   Pluto : undefined
@@ -125,7 +126,7 @@ function render()
 	RenderObj(ms, "Earth", ["Moon"]);
 	RenderObj(ms, "Mars");
 	RenderObj(ms, "Jupiter", ["Europa", "Io"]);
-	RenderObj(ms, "Saturn");
+	RenderObj(ms, "Saturn", ["Titan"]);
 	RenderObj(ms, "Uranus");
 	RenderObj(ms, "Neptune");
 	RenderObj(ms, "Pluto");

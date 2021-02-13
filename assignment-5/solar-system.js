@@ -59,6 +59,12 @@ var SolarSystem = {
     year : 3,
     color : [ 1.0, 1.0, 0.0, 1.0 ]
   },
+  Titan : {
+    radius : 0.2,
+    distance : 1.5,
+    year : 0.1,
+    color : [ 0.5, 0.5, 0.5, 1.0 ]
+  },
   Uranus : {
     radius : 0.5,
     distance : 15,
