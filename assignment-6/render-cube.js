@@ -1,4 +1,4 @@
-/*Assignment 4, Sydney Fonderie*/
+/*Assignment 6, Sydney Fonderie*/
 
 var cube = null;
 var gl = null;
@@ -28,7 +28,7 @@ function render() {
 
   angle += 2.0; // degrees
 
-  cube.MV = rotate( angle, [1, 1, 0] );
+  cube.MV = rotate( angle, [1, 1, 1] );
 
   cube.render();
 
