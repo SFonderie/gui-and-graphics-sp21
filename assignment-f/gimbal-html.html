@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<script src="common/webgl-utils.js"></script>
+		<script src="common/init-shaders.js"></script>
+		<script src="common/model-view.js"></script>
+		<script src="common/matrix-stack.js"></script>
+		<script src="object-cylinder.js"></script>
+		<script src="object-sphere.js"></script>
+		<script src="object-ring.js"></script>
+		<script src="scene-data.js"></script>
+		<script src="render-gimbal.js"></script>
+
+		<script type="x-shader/x-vertex" id="object-vertex-shader">
+			attribute vec4 vPosition;
+			
+			uniform mat4 ModelView;
+			uniform mat4 Perspective;
+
+			void main()
+			{
+				gl_Position = Perspective * ModelView * vPosition;
+				gl_PointSize = 5.0;
+			}
+		</script>
+		<script type="x-shader/x-fragment" id="object-fragment-shader">
+			precision highp float;
+
+			uniform vec4 color;
+
+			void main()
+			{
+				gl_FragColor = color;
+			}
+		</script>
+	</head>
+	<body>
+		<canvas id="webgl-canvas" width="1280" height="720"></canvas>
+	</body>
+</html>
