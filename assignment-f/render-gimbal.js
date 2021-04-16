@@ -24,6 +24,17 @@ var far = 60;
 var time = 0.0;
 var timeDelta = 0.5;
 
+var slider1;
+var slider2;
+var slider3;
+
+var sVal1 = 0;
+var sVal2 = 0;
+var sVal3 = 0;
+
+var rAngle1 = 0;
+var rAngle2 = 0;
+var rAngle3 = 0;
 
 function init() 
 {
@@ -74,6 +85,18 @@ function init()
 		};
 	}
 	
+	slider1 = document.getElementById("slider-1");
+	slider2 = document.getElementById("slider-2");
+	slider3 = document.getElementById("slider-3");
+	
+	sVal1 = slider1.value;
+	sVal2 = slider2.value;
+	sVal3 = slider3.value;
+	
+	slider1.oninput = function() { sVal1 = this.value; }
+	slider2.oninput = function() { sVal2 = this.value; }
+	slider3.oninput = function() { sVal3 = this.value; }
+	
 	resize();
 	
 	window.requestAnimationFrame(render);
@@ -82,6 +105,11 @@ function init()
 function render()
 {
 	time += timeDelta;
+	
+	var aMultiplier = 0.01;
+	rAngle1 += sVal1 * timeDelta * aMultiplier;
+	rAngle2 += sVal2 * timeDelta * aMultiplier;
+	rAngle3 += sVal3 * timeDelta * aMultiplier;
 	
 	var matrixStack = new MatrixStack();
 	
@@ -100,16 +128,25 @@ function render()
 
 //Renders the given item using the given matrix
 //stack, and renders in points if so desired.
-function DrawObject(data, matrixStack, pointMode)
+function DrawObject(data, matrixStack, pointMode, rAngle, useAngle)
 {
 	if (!pointMode) { pointMode = false; }
+	if (!useAngle) { useAngle = false; }
 	data.model.PointMode = pointMode;
 	
 	//Inherit matrices.
 	matrixStack.push();
 	
+	if(useAngle)
+	{
+		matrixStack.rotate(data.baseAngle + rAngle, data.axis);
+	} 
+	else
+	{
+		matrixStack.rotate(data.baseAngle + (data.timeScale * time), data.axis);
+	}
+	
 	//Apply transformation matrices using data.
-	matrixStack.rotate(data.baseAngle + (data.timeScale * time), data.axis);
 	matrixStack.translate(data.translate[0], data.translate[1], data.translate[2]);
 	matrixStack.scale(data.scale[0], data.scale[1], data.scale[2]);
 	
@@ -129,7 +166,12 @@ function DrawObject(data, matrixStack, pointMode)
 	{
 		switch(data.children[i].type)
 		{
-			case "Cylinder": DrawObject(Cylinders[data.children[i].name], matrixStack, pointMode); break;
+			case "Cylinder":
+				if(data.children[i].name == "AxisA"){ DrawObject(Cylinders[data.children[i].name], matrixStack, pointMode, rAngle1, true); }
+				else if(data.children[i].name == "AxisB"){ DrawObject(Cylinders[data.children[i].name], matrixStack, pointMode, rAngle2, true); }
+				else if(data.children[i].name == "AxisC"){ DrawObject(Cylinders[data.children[i].name], matrixStack, pointMode, rAngle3, true); }
+				else { DrawObject(Cylinders[data.children[i].name], matrixStack, pointMode); }
+				break;
 			case "Sphere": DrawObject(Spheres[data.children[i].name], matrixStack, pointMode); break;
 			case "Ring": DrawObject(Rings[data.children[i].name], matrixStack, pointMode); break;
 		}
